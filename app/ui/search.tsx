@@ -2,25 +2,30 @@
 
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function Search({ placeholder }: { placeholder: string }) {
-  const searchParams = useSearchParams();
+    const searchParams = useSearchParams();
     const pathName = usePathname();
     const { replace } = useRouter();
 
   // Function to handle search input changes
   // This function updates the URL with the search term
   // and can be used to filter results based on the search term.
-  function handleSearch({term}: {term: string}){
+  const handleSearch = useDebouncedCallback((term) => {
+    console.log(`Searching... ${term}`);
     const params = new URLSearchParams(searchParams);
+
+    params.set('page', '1'); // Reset to first page on new search
+
     if(term) {
       params.set('query', term);
     } else {
       params.delete('query');
     }
     replace(`${pathName}?${params.toString()}`);
+  }, 300);
 
-  }
   return (
     <div className="relative flex flex-1 flex-shrink-0">
       <label htmlFor="search" className="sr-only">
