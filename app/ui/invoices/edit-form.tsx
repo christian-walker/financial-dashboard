@@ -9,7 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { updateInvoice } from '@/app/lib/actions'; // updateInvoice is the function to update the invoice
+import { updateInvoice } from '@/app/lib/actions';
 export default function EditInvoiceForm({
   invoice,
   customers,
@@ -17,8 +17,12 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+  // You cannot use the updateInvoice function directly in the form action because it is an async function.
+  // bind is used to create a new function with the invoice.id bound to the function.
+  // This allows you to use the updateInvoice function in the form action.
   return (
-    <form>
+    <form action={updateInvoiceWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
